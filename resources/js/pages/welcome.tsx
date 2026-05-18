@@ -1,393 +1,390 @@
+import React, { useState, useEffect } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { dashboard, login, register } from '@/routes';
+import { 
+    Battery, Lock, Activity, ShieldCheck, 
+    Droplet, Zap, HeartPulse, RefreshCw, CheckCircle2, XCircle,
+    Moon, Flame
+} from 'lucide-react';
 
-export default function Welcome({
-    canRegister = true,
-}: {
-    canRegister?: boolean;
-}) {
+const features = [
+    {
+        title: "Readiness Score",
+        value: "94",
+        status: " / Optimal",
+        icon: <HeartPulse className="text-white" />,
+        color: "from-[#F53003] to-[#FF750F]",
+        textColor: "text-[#F53003]",
+        image: "/ring-render.png"
+    },
+    {
+        title: "Sleep Quality",
+        value: "8h 12m",
+        status: " / Restorative",
+        icon: <Moon className="text-white" />,
+        color: "from-indigo-500 to-purple-600",
+        textColor: "text-indigo-400",
+        image: "/ring-sleep.png"
+    },
+    {
+        title: "Active Calories",
+        value: "840",
+        status: " / Target Met",
+        icon: <Flame className="text-white" />,
+        color: "from-orange-500 to-rose-500",
+        textColor: "text-orange-400",
+        image: "/ring-activity.png"
+    }
+];
+
+export default function Welcome({ canRegister = true }: { canRegister?: boolean }) {
     const { auth } = usePage().props;
+    const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsAnimating(true);
+            setTimeout(() => {
+                setCurrentFeatureIndex((prev) => (prev + 1) % features.length);
+                setIsAnimating(false);
+            }, 300); // Wait for fade out
+        }, 3000); // Change every 3 seconds
+        
+        return () => clearInterval(interval);
+    }, []);
+
+    const activeFeature = features[currentFeatureIndex];
 
     return (
         <>
-            <Head title="Welcome" />
-            <div className="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
-                <header className="mb-6 w-full max-w-[335px] text-sm not-has-[nav]:hidden lg:max-w-4xl">
-                    <nav className="flex items-center justify-end gap-4">
+            <Head title="Olevra Smart Ring | Own Your Health" />
+            <div className="min-h-screen bg-[#0a0a0a] text-[#EDEDEC] font-sans selection:bg-[#F53003] selection:text-white">
+                {/* Navbar */}
+                <nav className="absolute top-0 w-full p-6 z-50 flex justify-between items-center max-w-7xl mx-auto left-0 right-0">
+                    <div className="text-2xl font-bold tracking-tighter text-white">Olevra.</div>
+                    <div className="hidden md:flex gap-8 items-center justify-center absolute left-1/2 -translate-x-1/2">
+                        <Link href="/" className="text-sm font-medium text-white hover:text-[#F53003] transition-colors">Home</Link>
+                        <Link href="/about" className="text-sm font-medium text-[#A1A09A] hover:text-[#F53003] transition-colors">About</Link>
+                        <Link href="/contact" className="text-sm font-medium text-[#A1A09A] hover:text-[#F53003] transition-colors">Contact</Link>
+                    </div>
+                    <div className="flex gap-4 relative z-10">
                         {auth.user ? (
-                            <Link
-                                href={dashboard()}
-                                className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                            >
-                                Dashboard
-                            </Link>
+                            <Link href={dashboard()} className="text-sm font-medium hover:text-[#F53003] transition-colors">Dashboard</Link>
                         ) : (
                             <>
-                                <Link
-                                    href={login()}
-                                    className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                                >
-                                    Log in
-                                </Link>
+                                <Link href={login()} className="text-sm font-medium hover:text-[#F53003] transition-colors">Log in</Link>
                                 {canRegister && (
-                                    <Link
-                                        href={register()}
-                                        className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                                    >
-                                        Register
-                                    </Link>
+                                    <Link href={register()} className="text-sm font-medium hover:text-[#F53003] transition-colors">Register</Link>
                                 )}
                             </>
                         )}
-                    </nav>
-                </header>
-                <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-                    <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
-                        <div className="flex-1 rounded-br-lg rounded-bl-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-tl-lg lg:rounded-br-none lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-                            <h1 className="mb-1 font-medium">
-                                Let's get started
+                    </div>
+                </nav>
+
+                {/* 1. Hero Section */}
+                <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#F53003]/20 rounded-full blur-[120px] -z-10"></div>
+                    <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+                        <div className="flex flex-col gap-8 z-10">
+                            <h1 className="text-5xl lg:text-7xl font-semibold leading-tight tracking-tight text-white">
+                                Own Your Health.<br/>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F53003] to-[#FF750F]">Not a Subscription.</span>
                             </h1>
-                            <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
-                                Laravel has an incredibly rich ecosystem.
-                                <br />
-                                We suggest starting with the following.
+                            <p className="text-lg lg:text-xl text-[#A1A09A] max-w-xl leading-relaxed">
+                                Advanced Sleep, HRV, Stress, and Cycle tracking in a sleek, aerospace-grade titanium ring. 100% of your data, zero hidden fees.
                             </p>
-                            <ul className="mb-4 flex flex-col lg:mb-6">
-                                <li className="relative flex items-center gap-4 py-2 before:absolute before:top-1/2 before:bottom-0 before:left-[0.4rem] before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A]">
-                                    <span className="relative bg-white py-1 dark:bg-[#161615]">
-                                        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
-                                        </span>
-                                    </span>
-                                    <span>
-                                        Read the
-                                        <a
-                                            href="https://laravel.com/docs"
-                                            target="_blank"
-                                            className="ml-1 inline-flex items-center space-x-1 font-medium text-[#f53003] underline underline-offset-4 dark:text-[#FF4433]"
-                                        >
-                                            <span>Documentation</span>
-                                            <svg
-                                                width={10}
-                                                height={11}
-                                                viewBox="0 0 10 11"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-2.5 w-2.5"
-                                            >
-                                                <path
-                                                    d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="square"
-                                                />
-                                            </svg>
-                                        </a>
-                                    </span>
-                                </li>
-                                <li className="relative flex items-center gap-4 py-2 before:absolute before:top-0 before:bottom-1/2 before:left-[0.4rem] before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A]">
-                                    <span className="relative bg-white py-1 dark:bg-[#161615]">
-                                        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
-                                        </span>
-                                    </span>
-                                    <span>
-                                        Watch video tutorials at
-                                        <a
-                                            href="https://laracasts.com"
-                                            target="_blank"
-                                            className="ml-1 inline-flex items-center space-x-1 font-medium text-[#f53003] underline underline-offset-4 dark:text-[#FF4433]"
-                                        >
-                                            <span>Laracasts</span>
-                                            <svg
-                                                width={10}
-                                                height={11}
-                                                viewBox="0 0 10 11"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-2.5 w-2.5"
-                                            >
-                                                <path
-                                                    d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="square"
-                                                />
-                                            </svg>
-                                        </a>
-                                    </span>
-                                </li>
-                            </ul>
-                            <ul className="flex gap-3 text-sm leading-normal">
-                                <li>
-                                    <a
-                                        href="https://cloud.laravel.com"
-                                        target="_blank"
-                                        className="inline-block rounded-sm border border-black bg-[#1b1b18] px-5 py-1.5 text-sm leading-normal text-white hover:border-black hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:border-white dark:hover:bg-white"
-                                    >
-                                        Deploy now
-                                    </a>
-                                </li>
-                            </ul>
+                            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                <button className="px-8 py-4 bg-[#F53003] hover:bg-[#D42600] text-white rounded-full font-medium text-lg transition-all shadow-[0_0_40px_rgba(245,48,3,0.4)] hover:shadow-[0_0_60px_rgba(245,48,3,0.6)] hover:-translate-y-1">
+                                    Get My Olevra Ring
+                                </button>
+                                <div className="text-sm text-[#A1A09A] flex flex-col gap-1 ml-4">
+                                    <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#F53003]" /> 30-Day Risk Free Trial</span>
+                                    <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#F53003]" /> Free Worldwide Shipping</span>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap gap-6 pt-4 border-t border-[#ffffff10]">
+                                <div className="flex items-center gap-2 text-sm text-[#EDEDEC]"><Battery className="w-5 h-5 text-[#A1A09A]" /> 7+ Days Battery</div>
+                                <div className="flex items-center gap-2 text-sm text-[#EDEDEC]"><Lock className="w-5 h-5 text-[#A1A09A]" /> 100% Data Privacy</div>
+                                <div className="flex items-center gap-2 text-sm text-[#EDEDEC]"><ShieldCheck className="w-5 h-5 text-[#A1A09A]" /> Zero Subscriptions</div>
+                            </div>
                         </div>
-                        <div className="relative -mb-px aspect-[335/364] w-full shrink-0 overflow-hidden rounded-t-lg bg-[#fff2f2] lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-[438px] lg:rounded-t-none lg:rounded-r-lg dark:bg-[#1D0002]">
-                            {/* Laravel Logo */}
-                            <svg
-                                className="w-full max-w-none translate-y-0 text-[#F53003] opacity-100 transition-all duration-750 dark:text-[#F61500] starting:opacity-0 motion-safe:starting:translate-y-6"
-                                viewBox="0 0 438 104"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M17.2036 -3H0V102.197H49.5189V86.7187H17.2036V-3Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M110.256 41.6337C108.061 38.1275 104.945 35.3731 100.905 33.3681C96.8667 31.3647 92.8016 30.3618 88.7131 30.3618C83.4247 30.3618 78.5885 31.3389 74.201 33.2923C69.8111 35.2456 66.0474 37.928 62.9059 41.3333C59.7643 44.7401 57.3198 48.6726 55.5754 53.1293C53.8287 57.589 52.9572 62.274 52.9572 67.1813C52.9572 72.1925 53.8287 76.8995 55.5754 81.3069C57.3191 85.7173 59.7636 89.6241 62.9059 93.0293C66.0474 96.4361 69.8119 99.1155 74.201 101.069C78.5885 103.022 83.4247 103.999 88.7131 103.999C92.8016 103.999 96.8667 102.997 100.905 100.994C104.945 98.9911 108.061 96.2359 110.256 92.7282V102.195H126.563V32.1642H110.256V41.6337ZM108.76 75.7472C107.762 78.4531 106.366 80.8078 104.572 82.8112C102.776 84.8161 100.606 86.4183 98.0637 87.6206C95.5202 88.823 92.7004 89.4238 89.6103 89.4238C86.5178 89.4238 83.7252 88.823 81.2324 87.6206C78.7388 86.4183 76.5949 84.8161 74.7998 82.8112C73.004 80.8078 71.6319 78.4531 70.6856 75.7472C69.7356 73.0421 69.2644 70.1868 69.2644 67.1821C69.2644 64.1758 69.7356 61.3205 70.6856 58.6154C71.6319 55.9102 73.004 53.5571 74.7998 51.5522C76.5949 49.5495 78.738 47.9451 81.2324 46.7427C83.7252 45.5404 86.5178 44.9396 89.6103 44.9396C92.7012 44.9396 95.5202 45.5404 98.0637 46.7427C100.606 47.9451 102.776 49.5487 104.572 51.5522C106.367 53.5571 107.762 55.9102 108.76 58.6154C109.756 61.3205 110.256 64.1758 110.256 67.1821C110.256 70.1868 109.756 73.0421 108.76 75.7472Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M242.805 41.6337C240.611 38.1275 237.494 35.3731 233.455 33.3681C229.416 31.3647 225.351 30.3618 221.262 30.3618C215.974 30.3618 211.138 31.3389 206.75 33.2923C202.36 35.2456 198.597 37.928 195.455 41.3333C192.314 44.7401 189.869 48.6726 188.125 53.1293C186.378 57.589 185.507 62.274 185.507 67.1813C185.507 72.1925 186.378 76.8995 188.125 81.3069C189.868 85.7173 192.313 89.6241 195.455 93.0293C198.597 96.4361 202.361 99.1155 206.75 101.069C211.138 103.022 215.974 103.999 221.262 103.999C225.351 103.999 229.416 102.997 233.455 100.994C237.494 98.9911 240.611 96.2359 242.805 92.7282V102.195H259.112V32.1642H242.805V41.6337ZM241.31 75.7472C240.312 78.4531 238.916 80.8078 237.122 82.8112C235.326 84.8161 233.156 86.4183 230.614 87.6206C228.07 88.823 225.251 89.4238 222.16 89.4238C219.068 89.4238 216.275 88.823 213.782 87.6206C211.289 86.4183 209.145 84.8161 207.35 82.8112C205.554 80.8078 204.182 78.4531 203.236 75.7472C202.286 73.0421 201.814 70.1868 201.814 67.1821C201.814 64.1758 202.286 61.3205 203.236 58.6154C204.182 55.9102 205.554 53.5571 207.35 51.5522C209.145 49.5495 211.288 47.9451 213.782 46.7427C216.275 45.5404 219.068 44.9396 222.16 44.9396C225.251 44.9396 228.07 45.5404 230.614 46.7427C233.156 47.9451 235.326 49.5487 237.122 51.5522C238.917 53.5571 240.312 55.9102 241.31 58.6154C242.306 61.3205 242.806 64.1758 242.806 67.1821C242.805 70.1868 242.305 73.0421 241.31 75.7472Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M438 -3H421.694V102.197H438V-3Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M139.43 102.197H155.735V48.2834H183.712V32.1665H139.43V102.197Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M324.49 32.1665L303.995 85.794L283.498 32.1665H266.983L293.748 102.197H314.242L341.006 32.1665H324.49Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M376.571 30.3656C356.603 30.3656 340.797 46.8497 340.797 67.1828C340.797 89.6597 356.094 104 378.661 104C391.29 104 399.354 99.1488 409.206 88.5848L398.189 80.0226C398.183 80.031 389.874 90.9895 377.468 90.9895C363.048 90.9895 356.977 79.3111 356.977 73.269H411.075C413.917 50.1328 398.775 30.3656 376.571 30.3656ZM357.02 61.0967C357.145 59.7487 359.023 43.3761 376.442 43.3761C393.861 43.3761 395.978 59.7464 396.099 61.0967H357.02Z"
-                                    fill="currentColor"
-                                />
-                            </svg>
-
-                            {/* 13 */}
-                            <svg
-                                className="relative -mt-[6.6rem] -ml-8 w-[438px] max-w-none [--stroke-color:#1B1B18] lg:ml-0 dark:[--stroke-color:#FF750F]"
-                                viewBox="0 0 440 392"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <g className="text-[#1B1B18] opacity-100 mix-blend-darken transition-all delay-300 duration-750 dark:text-black dark:mix-blend-normal starting:opacity-0">
-                                    <mask
-                                        id="path-1-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="-0.328613"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="-0.328613"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M234.936 400.8C204.136 400.8 178.936 392.4 159.336 375.6C140.136 358.8 130.536 337 130.536 310.2H200.736C200.736 318.2 203.736 324.8 209.736 330C215.736 335.2 223.736 337.8 233.736 337.8C243.336 337.8 251.136 335 257.136 329.4C263.536 323.8 266.736 316.6 266.736 307.8C266.736 299.8 263.936 293.2 258.336 288C252.736 282.8 245.536 280.2 236.736 280.2H199.536V218.4H236.736C243.536 218.4 249.336 216 254.136 211.2C258.936 206.4 261.336 200.4 261.336 193.2C261.336 184.8 258.736 178.2 253.536 173.4C248.336 168.6 241.736 166.2 233.736 166.2C226.536 166.2 220.336 168.4 215.136 172.8C210.336 177.2 207.936 182.8 207.936 189.6H141.336C141.336 164.8 150.136 144.6 167.736 129C185.336 113 207.936 105 235.536 105C263.136 105 285.536 112.2 302.736 126.6C320.336 141 329.136 160 329.136 183.6C329.136 200.8 324.536 214.8 315.336 225.6C306.136 236 294.336 243.2 279.936 247.2C297.136 252 310.736 260.2 320.736 271.8C331.136 283.4 336.336 298 336.336 315.6C336.336 340.4 326.936 360.8 308.136 376.8C289.336 392.8 264.936 400.8 234.936 400.8Z" />
-                                        <path d="M26.8714 167.6H1.67139V105.2H94.6714V400.2H26.8714V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M234.936 400.8C204.136 400.8 178.936 392.4 159.336 375.6C140.136 358.8 130.536 337 130.536 310.2H200.736C200.736 318.2 203.736 324.8 209.736 330C215.736 335.2 223.736 337.8 233.736 337.8C243.336 337.8 251.136 335 257.136 329.4C263.536 323.8 266.736 316.6 266.736 307.8C266.736 299.8 263.936 293.2 258.336 288C252.736 282.8 245.536 280.2 236.736 280.2H199.536V218.4H236.736C243.536 218.4 249.336 216 254.136 211.2C258.936 206.4 261.336 200.4 261.336 193.2C261.336 184.8 258.736 178.2 253.536 173.4C248.336 168.6 241.736 166.2 233.736 166.2C226.536 166.2 220.336 168.4 215.136 172.8C210.336 177.2 207.936 182.8 207.936 189.6H141.336C141.336 164.8 150.136 144.6 167.736 129C185.336 113 207.936 105 235.536 105C263.136 105 285.536 112.2 302.736 126.6C320.336 141 329.136 160 329.136 183.6C329.136 200.8 324.536 214.8 315.336 225.6C306.136 236 294.336 243.2 279.936 247.2C297.136 252 310.736 260.2 320.736 271.8C331.136 283.4 336.336 298 336.336 315.6C336.336 340.4 326.936 360.8 308.136 376.8C289.336 392.8 264.936 400.8 234.936 400.8Z"
-                                        fill="currentColor"
+                        <div className="relative h-[400px] lg:h-[600px] flex items-center justify-center">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[#1a1a1a] to-[#2a2a2a] rounded-3xl border border-[#ffffff10] shadow-2xl flex items-center justify-center overflow-hidden">
+                                {features.map((feature, idx) => (
+                                    <img 
+                                        key={feature.title}
+                                        src={feature.image} 
+                                        alt={`Olevra Ring - ${feature.title}`} 
+                                        className={`absolute inset-0 w-full h-full object-cover mix-blend-screen transition-opacity duration-1000 ease-in-out ${idx === currentFeatureIndex ? 'opacity-90 z-10' : 'opacity-0 z-0'}`} 
                                     />
-                                    <path
-                                        d="M26.8714 167.6H1.67139V105.2H94.6714V400.2H26.8714V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M234.936 400.8C204.136 400.8 178.936 392.4 159.336 375.6C140.136 358.8 130.536 337 130.536 310.2H200.736C200.736 318.2 203.736 324.8 209.736 330C215.736 335.2 223.736 337.8 233.736 337.8C243.336 337.8 251.136 335 257.136 329.4C263.536 323.8 266.736 316.6 266.736 307.8C266.736 299.8 263.936 293.2 258.336 288C252.736 282.8 245.536 280.2 236.736 280.2H199.536V218.4H236.736C243.536 218.4 249.336 216 254.136 211.2C258.936 206.4 261.336 200.4 261.336 193.2C261.336 184.8 258.736 178.2 253.536 173.4C248.336 168.6 241.736 166.2 233.736 166.2C226.536 166.2 220.336 168.4 215.136 172.8C210.336 177.2 207.936 182.8 207.936 189.6H141.336C141.336 164.8 150.136 144.6 167.736 129C185.336 113 207.936 105 235.536 105C263.136 105 285.536 112.2 302.736 126.6C320.336 141 329.136 160 329.136 183.6C329.136 200.8 324.536 214.8 315.336 225.6C306.136 236 294.336 243.2 279.936 247.2C297.136 252 310.736 260.2 320.736 271.8C331.136 283.4 336.336 298 336.336 315.6C336.336 340.4 326.936 360.8 308.136 376.8C289.336 392.8 264.936 400.8 234.936 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-1-mask)"
-                                    />
-                                    <path
-                                        d="M26.8714 167.6H1.67139V105.2H94.6714V400.2H26.8714V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-1-mask)"
-                                    />
-                                </g>
-
-                                <g className="text-[#F3BEC7] opacity-100 transition-all delay-400 duration-750 dark:text-[#4B0600] starting:opacity-0 motion-safe:starting:-translate-x-[26px]">
-                                    <mask
-                                        id="path-2-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="25.3357"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="25.3357"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M260.6 400.8C229.8 400.8 204.6 392.4 185 375.6C165.8 358.8 156.2 337 156.2 310.2H226.4C226.4 318.2 229.4 324.8 235.4 330C241.4 335.2 249.4 337.8 259.4 337.8C269 337.8 276.8 335 282.8 329.4C289.2 323.8 292.4 316.6 292.4 307.8C292.4 299.8 289.6 293.2 284 288C278.4 282.8 271.2 280.2 262.4 280.2H225.2V218.4H262.4C269.2 218.4 275 216 279.8 211.2C284.6 206.4 287 200.4 287 193.2C287 184.8 284.4 178.2 279.2 173.4C274 168.6 267.4 166.2 259.4 166.2C252.2 166.2 246 168.4 240.8 172.8C236 177.2 233.6 182.8 233.6 189.6H167C167 164.8 175.8 144.6 193.4 129C211 113 233.6 105 261.2 105C288.8 105 311.2 112.2 328.4 126.6C346 141 354.8 160 354.8 183.6C354.8 200.8 350.2 214.8 341 225.6C331.8 236 320 243.2 305.6 247.2C322.8 252 336.4 260.2 346.4 271.8C356.8 283.4 362 298 362 315.6C362 340.4 352.6 360.8 333.8 376.8C315 392.8 290.6 400.8 260.6 400.8Z" />
-                                        <path d="M52.5357 167.6H27.3357V105.2H120.336V400.2H52.5357V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M260.6 400.8C229.8 400.8 204.6 392.4 185 375.6C165.8 358.8 156.2 337 156.2 310.2H226.4C226.4 318.2 229.4 324.8 235.4 330C241.4 335.2 249.4 337.8 259.4 337.8C269 337.8 276.8 335 282.8 329.4C289.2 323.8 292.4 316.6 292.4 307.8C292.4 299.8 289.6 293.2 284 288C278.4 282.8 271.2 280.2 262.4 280.2H225.2V218.4H262.4C269.2 218.4 275 216 279.8 211.2C284.6 206.4 287 200.4 287 193.2C287 184.8 284.4 178.2 279.2 173.4C274 168.6 267.4 166.2 259.4 166.2C252.2 166.2 246 168.4 240.8 172.8C236 177.2 233.6 182.8 233.6 189.6H167C167 164.8 175.8 144.6 193.4 129C211 113 233.6 105 261.2 105C288.8 105 311.2 112.2 328.4 126.6C346 141 354.8 160 354.8 183.6C354.8 200.8 350.2 214.8 341 225.6C331.8 236 320 243.2 305.6 247.2C322.8 252 336.4 260.2 346.4 271.8C356.8 283.4 362 298 362 315.6C362 340.4 352.6 360.8 333.8 376.8C315 392.8 290.6 400.8 260.6 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M52.5357 167.6H27.3357V105.2H120.336V400.2H52.5357V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M260.6 400.8C229.8 400.8 204.6 392.4 185 375.6C165.8 358.8 156.2 337 156.2 310.2H226.4C226.4 318.2 229.4 324.8 235.4 330C241.4 335.2 249.4 337.8 259.4 337.8C269 337.8 276.8 335 282.8 329.4C289.2 323.8 292.4 316.6 292.4 307.8C292.4 299.8 289.6 293.2 284 288C278.4 282.8 271.2 280.2 262.4 280.2H225.2V218.4H262.4C269.2 218.4 275 216 279.8 211.2C284.6 206.4 287 200.4 287 193.2C287 184.8 284.4 178.2 279.2 173.4C274 168.6 267.4 166.2 259.4 166.2C252.2 166.2 246 168.4 240.8 172.8C236 177.2 233.6 182.8 233.6 189.6H167C167 164.8 175.8 144.6 193.4 129C211 113 233.6 105 261.2 105C288.8 105 311.2 112.2 328.4 126.6C346 141 354.8 160 354.8 183.6C354.8 200.8 350.2 214.8 341 225.6C331.8 236 320 243.2 305.6 247.2C322.8 252 336.4 260.2 346.4 271.8C356.8 283.4 362 298 362 315.6C362 340.4 352.6 360.8 333.8 376.8C315 392.8 290.6 400.8 260.6 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-2-mask)"
-                                    />
-                                    <path
-                                        d="M52.5357 167.6H27.3357V105.2H120.336V400.2H52.5357V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-2-mask)"
-                                    />
-                                </g>
-
-                                <g className="text-[#F8B803] opacity-100 mix-blend-color transition-all delay-400 duration-750 dark:text-[#391800] dark:mix-blend-hard-light starting:opacity-0 motion-safe:starting:-translate-x-[51px]">
-                                    <mask
-                                        id="path-3-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="51"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="51"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M286.264 400.8C255.464 400.8 230.264 392.4 210.664 375.6C191.464 358.8 181.864 337 181.864 310.2H252.064C252.064 318.2 255.064 324.8 261.064 330C267.064 335.2 275.064 337.8 285.064 337.8C294.664 337.8 302.464 335 308.464 329.4C314.864 323.8 318.064 316.6 318.064 307.8C318.064 299.8 315.264 293.2 309.664 288C304.064 282.8 296.864 280.2 288.064 280.2H250.864V218.4H288.064C294.864 218.4 300.664 216 305.464 211.2C310.264 206.4 312.664 200.4 312.664 193.2C312.664 184.8 310.064 178.2 304.864 173.4C299.664 168.6 293.064 166.2 285.064 166.2C277.864 166.2 271.664 168.4 266.464 172.8C261.664 177.2 259.264 182.8 259.264 189.6H192.664C192.664 164.8 201.464 144.6 219.064 129C236.664 113 259.264 105 286.864 105C314.464 105 336.864 112.2 354.064 126.6C371.664 141 380.464 160 380.464 183.6C380.464 200.8 375.864 214.8 366.664 225.6C357.464 236 345.664 243.2 331.264 247.2C348.464 252 362.064 260.2 372.064 271.8C382.464 283.4 387.664 298 387.664 315.6C387.664 340.4 378.264 360.8 359.464 376.8C340.664 392.8 316.264 400.8 286.264 400.8Z" />
-                                        <path d="M78.2 167.6H53V105.2H146V400.2H78.2V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M286.264 400.8C255.464 400.8 230.264 392.4 210.664 375.6C191.464 358.8 181.864 337 181.864 310.2H252.064C252.064 318.2 255.064 324.8 261.064 330C267.064 335.2 275.064 337.8 285.064 337.8C294.664 337.8 302.464 335 308.464 329.4C314.864 323.8 318.064 316.6 318.064 307.8C318.064 299.8 315.264 293.2 309.664 288C304.064 282.8 296.864 280.2 288.064 280.2H250.864V218.4H288.064C294.864 218.4 300.664 216 305.464 211.2C310.264 206.4 312.664 200.4 312.664 193.2C312.664 184.8 310.064 178.2 304.864 173.4C299.664 168.6 293.064 166.2 285.064 166.2C277.864 166.2 271.664 168.4 266.464 172.8C261.664 177.2 259.264 182.8 259.264 189.6H192.664C192.664 164.8 201.464 144.6 219.064 129C236.664 113 259.264 105 286.864 105C314.464 105 336.864 112.2 354.064 126.6C371.664 141 380.464 160 380.464 183.6C380.464 200.8 375.864 214.8 366.664 225.6C357.464 236 345.664 243.2 331.264 247.2C348.464 252 362.064 260.2 372.064 271.8C382.464 283.4 387.664 298 387.664 315.6C387.664 340.4 378.264 360.8 359.464 376.8C340.664 392.8 316.264 400.8 286.264 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M78.2 167.6H53V105.2H146V400.2H78.2V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M286.264 400.8C255.464 400.8 230.264 392.4 210.664 375.6C191.464 358.8 181.864 337 181.864 310.2H252.064C252.064 318.2 255.064 324.8 261.064 330C267.064 335.2 275.064 337.8 285.064 337.8C294.664 337.8 302.464 335 308.464 329.4C314.864 323.8 318.064 316.6 318.064 307.8C318.064 299.8 315.264 293.2 309.664 288C304.064 282.8 296.864 280.2 288.064 280.2H250.864V218.4H288.064C294.864 218.4 300.664 216 305.464 211.2C310.264 206.4 312.664 200.4 312.664 193.2C312.664 184.8 310.064 178.2 304.864 173.4C299.664 168.6 293.064 166.2 285.064 166.2C277.864 166.2 271.664 168.4 266.464 172.8C261.664 177.2 259.264 182.8 259.264 189.6H192.664C192.664 164.8 201.464 144.6 219.064 129C236.664 113 259.264 105 286.864 105C314.464 105 336.864 112.2 354.064 126.6C371.664 141 380.464 160 380.464 183.6C380.464 200.8 375.864 214.8 366.664 225.6C357.464 236 345.664 243.2 331.264 247.2C348.464 252 362.064 260.2 372.064 271.8C382.464 283.4 387.664 298 387.664 315.6C387.664 340.4 378.264 360.8 359.464 376.8C340.664 392.8 316.264 400.8 286.264 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-3-mask)"
-                                    />
-                                    <path
-                                        d="M78.2 167.6H53V105.2H146V400.2H78.2V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-3-mask)"
-                                    />
-                                </g>
-
-                                <g className="text-[#F3BEC7] opacity-100 mix-blend-multiply transition-all delay-400 duration-750 dark:text-[#733000] dark:mix-blend-normal starting:opacity-0 motion-safe:starting:-translate-x-[78px]">
-                                    <mask
-                                        id="path-4-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="76.6643"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="76.6643"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M311.929 400.8C281.129 400.8 255.929 392.4 236.329 375.6C217.129 358.8 207.529 337 207.529 310.2H277.729C277.729 318.2 280.729 324.8 286.729 330C292.729 335.2 300.729 337.8 310.729 337.8C320.329 337.8 328.129 335 334.129 329.4C340.529 323.8 343.729 316.6 343.729 307.8C343.729 299.8 340.929 293.2 335.329 288C329.729 282.8 322.529 280.2 313.729 280.2H276.529V218.4H313.729C320.529 218.4 326.329 216 331.129 211.2C335.929 206.4 338.329 200.4 338.329 193.2C338.329 184.8 335.729 178.2 330.529 173.4C325.329 168.6 318.729 166.2 310.729 166.2C303.529 166.2 297.329 168.4 292.129 172.8C287.329 177.2 284.929 182.8 284.929 189.6H218.329C218.329 164.8 227.129 144.6 244.729 129C262.329 113 284.929 105 312.529 105C340.129 105 362.529 112.2 379.729 126.6C397.329 141 406.129 160 406.129 183.6C406.129 200.8 401.529 214.8 392.329 225.6C383.129 236 371.329 243.2 356.929 247.2C374.129 252 387.729 260.2 397.729 271.8C408.129 283.4 413.329 298 413.329 315.6C413.329 340.4 403.929 360.8 385.129 376.8C366.329 392.8 341.929 400.8 311.929 400.8Z" />
-                                        <path d="M103.864 167.6H78.6643V105.2H171.664V400.2H103.864V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M311.929 400.8C281.129 400.8 255.929 392.4 236.329 375.6C217.129 358.8 207.529 337 207.529 310.2H277.729C277.729 318.2 280.729 324.8 286.729 330C292.729 335.2 300.729 337.8 310.729 337.8C320.329 337.8 328.129 335 334.129 329.4C340.529 323.8 343.729 316.6 343.729 307.8C343.729 299.8 340.929 293.2 335.329 288C329.729 282.8 322.529 280.2 313.729 280.2H276.529V218.4H313.729C320.529 218.4 326.329 216 331.129 211.2C335.929 206.4 338.329 200.4 338.329 193.2C338.329 184.8 335.729 178.2 330.529 173.4C325.329 168.6 318.729 166.2 310.729 166.2C303.529 166.2 297.329 168.4 292.129 172.8C287.329 177.2 284.929 182.8 284.929 189.6H218.329C218.329 164.8 227.129 144.6 244.729 129C262.329 113 284.929 105 312.529 105C340.129 105 362.529 112.2 379.729 126.6C397.329 141 406.129 160 406.129 183.6C406.129 200.8 401.529 214.8 392.329 225.6C383.129 236 371.329 243.2 356.929 247.2C374.129 252 387.729 260.2 397.729 271.8C408.129 283.4 413.329 298 413.329 315.6C413.329 340.4 403.929 360.8 385.129 376.8C366.329 392.8 341.929 400.8 311.929 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M103.864 167.6H78.6643V105.2H171.664V400.2H103.864V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M311.929 400.8C281.129 400.8 255.929 392.4 236.329 375.6C217.129 358.8 207.529 337 207.529 310.2H277.729C277.729 318.2 280.729 324.8 286.729 330C292.729 335.2 300.729 337.8 310.729 337.8C320.329 337.8 328.129 335 334.129 329.4C340.529 323.8 343.729 316.6 343.729 307.8C343.729 299.8 340.929 293.2 335.329 288C329.729 282.8 322.529 280.2 313.729 280.2H276.529V218.4H313.729C320.529 218.4 326.329 216 331.129 211.2C335.929 206.4 338.329 200.4 338.329 193.2C338.329 184.8 335.729 178.2 330.529 173.4C325.329 168.6 318.729 166.2 310.729 166.2C303.529 166.2 297.329 168.4 292.129 172.8C287.329 177.2 284.929 182.8 284.929 189.6H218.329C218.329 164.8 227.129 144.6 244.729 129C262.329 113 284.929 105 312.529 105C340.129 105 362.529 112.2 379.729 126.6C397.329 141 406.129 160 406.129 183.6C406.129 200.8 401.529 214.8 392.329 225.6C383.129 236 371.329 243.2 356.929 247.2C374.129 252 387.729 260.2 397.729 271.8C408.129 283.4 413.329 298 413.329 315.6C413.329 340.4 403.929 360.8 385.129 376.8C366.329 392.8 341.929 400.8 311.929 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-4-mask)"
-                                    />
-                                    <path
-                                        d="M103.864 167.6H78.6643V105.2H171.664V400.2H103.864V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-4-mask)"
-                                    />
-                                </g>
-
-                                <g className="text-[#F3BEC7] opacity-100 mix-blend-hard-light transition-all delay-400 duration-750 dark:text-[#4B0600] starting:opacity-0 motion-safe:starting:-translate-x-[102px]">
-                                    <mask
-                                        id="path-5-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="102.329"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="102.329"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M337.593 400.8C306.793 400.8 281.593 392.4 261.993 375.6C242.793 358.8 233.193 337 233.193 310.2H303.393C303.393 318.2 306.393 324.8 312.393 330C318.393 335.2 326.393 337.8 336.393 337.8C345.993 337.8 353.793 335 359.793 329.4C366.193 323.8 369.393 316.6 369.393 307.8C369.393 299.8 366.593 293.2 360.993 288C355.393 282.8 348.193 280.2 339.393 280.2H302.193V218.4H339.393C346.193 218.4 351.993 216 356.793 211.2C361.593 206.4 363.993 200.4 363.993 193.2C363.993 184.8 361.393 178.2 356.193 173.4C350.993 168.6 344.393 166.2 336.393 166.2C329.193 166.2 322.993 168.4 317.793 172.8C312.993 177.2 310.593 182.8 310.593 189.6H243.993C243.993 164.8 252.793 144.6 270.393 129C287.993 113 310.593 105 338.193 105C365.793 105 388.193 112.2 405.393 126.6C422.993 141 431.793 160 431.793 183.6C431.793 200.8 427.193 214.8 417.993 225.6C408.793 236 396.993 243.2 382.593 247.2C399.793 252 413.393 260.2 423.393 271.8C433.793 283.4 438.993 298 438.993 315.6C438.993 340.4 429.593 360.8 410.793 376.8C391.993 392.8 367.593 400.8 337.593 400.8Z" />
-                                        <path d="M129.529 167.6H104.329V105.2H197.329V400.2H129.529V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M337.593 400.8C306.793 400.8 281.593 392.4 261.993 375.6C242.793 358.8 233.193 337 233.193 310.2H303.393C303.393 318.2 306.393 324.8 312.393 330C318.393 335.2 326.393 337.8 336.393 337.8C345.993 337.8 353.793 335 359.793 329.4C366.193 323.8 369.393 316.6 369.393 307.8C369.393 299.8 366.593 293.2 360.993 288C355.393 282.8 348.193 280.2 339.393 280.2H302.193V218.4H339.393C346.193 218.4 351.993 216 356.793 211.2C361.593 206.4 363.993 200.4 363.993 193.2C363.993 184.8 361.393 178.2 356.193 173.4C350.993 168.6 344.393 166.2 336.393 166.2C329.193 166.2 322.993 168.4 317.793 172.8C312.993 177.2 310.593 182.8 310.593 189.6H243.993C243.993 164.8 252.793 144.6 270.393 129C287.993 113 310.593 105 338.193 105C365.793 105 388.193 112.2 405.393 126.6C422.993 141 431.793 160 431.793 183.6C431.793 200.8 427.193 214.8 417.993 225.6C408.793 236 396.993 243.2 382.593 247.2C399.793 252 413.393 260.2 423.393 271.8C433.793 283.4 438.993 298 438.993 315.6C438.993 340.4 429.593 360.8 410.793 376.8C391.993 392.8 367.593 400.8 337.593 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M129.529 167.6H104.329V105.2H197.329V400.2H129.529V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M337.593 400.8C306.793 400.8 281.593 392.4 261.993 375.6C242.793 358.8 233.193 337 233.193 310.2H303.393C303.393 318.2 306.393 324.8 312.393 330C318.393 335.2 326.393 337.8 336.393 337.8C345.993 337.8 353.793 335 359.793 329.4C366.193 323.8 369.393 316.6 369.393 307.8C369.393 299.8 366.593 293.2 360.993 288C355.393 282.8 348.193 280.2 339.393 280.2H302.193V218.4H339.393C346.193 218.4 351.993 216 356.793 211.2C361.593 206.4 363.993 200.4 363.993 193.2C363.993 184.8 361.393 178.2 356.193 173.4C350.993 168.6 344.393 166.2 336.393 166.2C329.193 166.2 322.993 168.4 317.793 172.8C312.993 177.2 310.593 182.8 310.593 189.6H243.993C243.993 164.8 252.793 144.6 270.393 129C287.993 113 310.593 105 338.193 105C365.793 105 388.193 112.2 405.393 126.6C422.993 141 431.793 160 431.793 183.6C431.793 200.8 427.193 214.8 417.993 225.6C408.793 236 396.993 243.2 382.593 247.2C399.793 252 413.393 260.2 423.393 271.8C433.793 283.4 438.993 298 438.993 315.6C438.993 340.4 429.593 360.8 410.793 376.8C391.993 392.8 367.593 400.8 337.593 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-5-mask)"
-                                    />
-                                    <path
-                                        d="M129.529 167.6H104.329V105.2H197.329V400.2H129.529V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-5-mask)"
-                                    />
-                                </g>
-                            </svg>
-                            <div className="absolute inset-0 rounded-t-lg shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-t-none lg:rounded-r-lg dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"></div>
+                                ))}
+                                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+                                <div className="absolute bottom-8 left-8 right-8 bg-black/40 backdrop-blur-md border border-[#ffffff10] rounded-xl p-4 flex gap-4 hover:-translate-y-1 transition-all overflow-hidden h-20">
+                                    <div className={`transition-all duration-300 transform ${isAnimating ? '-translate-y-8 opacity-0' : 'translate-y-0 opacity-100'} w-12 h-12 rounded-full bg-gradient-to-br ${activeFeature.color} flex items-center justify-center shrink-0`}>
+                                        {activeFeature.icon}
+                                    </div>
+                                    <div className={`transition-all duration-300 transform ${isAnimating ? 'translate-y-8 opacity-0' : 'translate-y-0 opacity-100'}`}>
+                                        <div className="text-xs text-[#A1A09A]">{activeFeature.title}</div>
+                                        <div className="text-2xl font-bold text-white whitespace-nowrap">
+                                            {activeFeature.value}<span className={`text-sm ${activeFeature.textColor}`}>{activeFeature.status}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </main>
-                </div>
-                <div className="hidden h-14.5 lg:block"></div>
+                    </div>
+                </section>
+
+                {/* 2. The Problem Section */}
+                <section className="py-24 bg-white text-[#1b1b18]">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="text-center max-w-3xl mx-auto mb-16">
+                            <span className="text-sm font-bold tracking-widest text-[#F53003] uppercase">The Wearable Industry's Dirty Secret</span>
+                            <h2 className="text-4xl lg:text-5xl font-bold mt-4 mb-6 leading-tight">93% of health trackers just tell you what you already know.</h2>
+                            <p className="text-lg text-[#706f6c]">
+                                You don't need a buzzing wristband to tell you you're tired. You need actionable insights to actually fix it. Most trackers give you raw, confusing numbers and then charge you a monthly fee just to look at them.
+                            </p>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <div className="bg-[#FDFDFC] border border-[#e3e3e0] rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow hover:-translate-y-1">
+                                <div className="w-12 h-12 rounded-full bg-[#fff2f2] flex items-center justify-center mb-6">
+                                    <Activity className="text-[#F53003] w-6 h-6" />
+                                </div>
+                                <h3 className="text-xl font-bold mb-3">Track (The Symptom)</h3>
+                                <p className="text-[#706f6c]">Waking up exhausted after "8 hours" of sleep? Olevra breaks down deep sleep, REM, and restlessness so you know exactly why.</p>
+                            </div>
+                            <div className="bg-[#FDFDFC] border border-[#e3e3e0] rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow hover:-translate-y-1">
+                                <div className="w-12 h-12 rounded-full bg-[#fff2f2] flex items-center justify-center mb-6">
+                                    <RefreshCw className="text-[#F53003] w-6 h-6" />
+                                </div>
+                                <h3 className="text-xl font-bold mb-3">Align (The Action)</h3>
+                                <p className="text-[#706f6c]">Feeling random afternoon crashes? We align your HRV and stress data to tell you when to push hard, and when to prioritize recovery.</p>
+                            </div>
+                            <div className="bg-[#FDFDFC] border border-[#e3e3e0] rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow hover:-translate-y-1">
+                                <div className="w-12 h-12 rounded-full bg-[#fff2f2] flex items-center justify-center mb-6">
+                                    <HeartPulse className="text-[#F53003] w-6 h-6" />
+                                </div>
+                                <h3 className="text-xl font-bold mb-3">Thrive (The Result)</h3>
+                                <p className="text-[#706f6c]">Stop guessing. Let precision biometrics guide your daily habits, workouts, and sleep routines—without locking your own data behind a paywall.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 3. Features Breakdown */}
+                <section className="py-32 bg-[#0a0a0a] relative">
+                    <div className="max-w-7xl mx-auto px-6 relative z-10">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl lg:text-5xl font-bold text-white">Precision Engineering.</h2>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div className="group bg-[#161615] border border-[#ffffff10] rounded-3xl p-10 hover:bg-[#1a1a19] transition-colors overflow-hidden relative">
+                                <div className="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-[#F53003]/10 rounded-full blur-2xl group-hover:bg-[#F53003]/20 transition-all"></div>
+                                <Zap className="w-10 h-10 text-[#F53003] mb-6 relative z-10" />
+                                <h3 className="text-2xl font-bold text-white mb-4 relative z-10">7+ Days of Battery. Lightning Fast Charging.</h3>
+                                <p className="text-[#A1A09A] text-lg relative z-10">
+                                    Stop living tethered to an outlet. A full charge gives you over 7 days of continuous tracking. Forgot to charge? Drop it on the dock while you brush your teeth—a <strong className="text-white font-medium">5-minute fast-charge delivers a full 24 hours</strong> of battery life.
+                                </p>
+                            </div>
+                            
+                            <div className="group bg-[#161615] border border-[#ffffff10] rounded-3xl p-10 hover:bg-[#1a1a19] transition-colors overflow-hidden relative">
+                                <div className="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"></div>
+                                <Lock className="w-10 h-10 text-blue-500 mb-6 relative z-10" />
+                                <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Your Data. Zero Subscription Fees.</h3>
+                                <p className="text-[#A1A09A] text-lg relative z-10">
+                                    Why pay monthly rent for your own body's data? Olevra gives you lifetime access to premium insights, personalized sleep coaching, and advanced analytics with absolutely zero hidden fees.
+                                </p>
+                            </div>
+
+                            <div className="group bg-[#161615] border border-[#ffffff10] rounded-3xl p-10 hover:bg-[#1a1a19] transition-colors overflow-hidden relative">
+                                <div className="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gray-500/10 rounded-full blur-2xl group-hover:bg-gray-500/20 transition-all"></div>
+                                <Droplet className="w-10 h-10 text-gray-400 mb-6 relative z-10" />
+                                <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Jewelry-Grade Titanium. 100% Waterproof.</h3>
+                                <p className="text-[#A1A09A] text-lg relative z-10">
+                                    Engineered from aerospace-grade titanium. It’s lighter than a standard wedding band, scratch-resistant, and fully waterproof up to 50 meters (5 ATM). Wear it in the shower, the sauna, or the ocean.
+                                </p>
+                            </div>
+
+                            <div className="group bg-[#161615] border border-[#ffffff10] rounded-3xl p-10 hover:bg-[#1a1a19] transition-colors overflow-hidden relative">
+                                <div className="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
+                                <Activity className="w-10 h-10 text-emerald-500 mb-6 relative z-10" />
+                                <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Laboratory Precision on Your Finger.</h3>
+                                <p className="text-[#A1A09A] text-lg relative z-10">
+                                    Packed with advanced infrared and red LEDs to measure Blood Oxygen (SpO2), resting heart rate, HRV, and skin temperature. Flawless cycle tracking and stress monitoring that adapts to your unique baseline.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 4. Comparison Table */}
+                <section className="py-24 bg-[#0F0F0F]">
+                    <div className="max-w-5xl mx-auto px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl lg:text-5xl font-bold text-white mb-4">Don't Pay More for Less.</h2>
+                            <p className="text-[#A1A09A] text-xl">See how Olevra stacks up against the $400 status quo.</p>
+                        </div>
+                        
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr>
+                                        <th className="p-6 border-b border-[#ffffff10] text-[#A1A09A] font-normal text-lg">Feature</th>
+                                        <th className="p-6 border-b border-t border-l border-r border-[#ffffff10] bg-[#161615] rounded-t-2xl text-white font-bold text-xl w-1/3 relative shadow-2xl">
+                                            <div className="absolute -top-px left-0 right-0 h-[2px] bg-gradient-to-r from-[#F53003] to-[#FF750F]"></div>
+                                            Olevra Smart Ring
+                                        </th>
+                                        <th className="p-6 border-b border-[#ffffff10] text-[#A1A09A] font-normal text-lg w-1/3">The $400 Competition</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr className="hover:bg-[#1a1a1a] transition-colors">
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#EDEDEC]">Upfront Cost</td>
+                                        <td className="p-6 border-b border-l border-r border-[#ffffff10] bg-[#161615] text-white font-bold text-lg shadow-2xl">$249</td>
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#706f6c]">$399+</td>
+                                    </tr>
+                                    <tr className="hover:bg-[#1a1a1a] transition-colors">
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#EDEDEC]">Monthly Subscription Fee</td>
+                                        <td className="p-6 border-b border-l border-r border-[#ffffff10] bg-[#161615] text-[#10B981] font-bold text-lg flex items-center gap-2 shadow-2xl"><CheckCircle2 className="w-5 h-5"/> $0/month forever</td>
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#706f6c]">$5.99 - $30/month</td>
+                                    </tr>
+                                    <tr className="hover:bg-[#1a1a1a] transition-colors">
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#EDEDEC]">5-Minute Fast Charge</td>
+                                        <td className="p-6 border-b border-l border-r border-[#ffffff10] bg-[#161615] text-white font-bold text-lg shadow-2xl">24 Hours of Power</td>
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#706f6c] flex items-center gap-2"><XCircle className="w-5 h-5"/> N/A (Takes hours)</td>
+                                    </tr>
+                                    <tr className="hover:bg-[#1a1a1a] transition-colors">
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#EDEDEC]">Battery Life</td>
+                                        <td className="p-6 border-b border-l border-r border-[#ffffff10] bg-[#161615] text-white font-bold text-lg shadow-2xl">7+ Days</td>
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#706f6c]">3-5 Days</td>
+                                    </tr>
+                                    <tr className="hover:bg-[#1a1a1a] transition-colors">
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#EDEDEC]">Data Privacy & Ownership</td>
+                                        <td className="p-6 border-b border-l border-r border-[#ffffff10] bg-[#161615] rounded-b-2xl text-white font-bold text-lg shadow-2xl">100% Free Access</td>
+                                        <td className="p-6 border-b border-[#ffffff10] text-[#706f6c]">Paywalled Behind Subscriptions</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 5. Social Proof Overhaul */}
+                <section className="py-32 bg-white text-[#1b1b18]">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl lg:text-5xl font-bold mb-4">Proof in the Data.</h2>
+                            <p className="text-lg text-[#706f6c]">Real transformations from people who took back their health data.</p>
+                        </div>
+
+                        <div className="grid lg:grid-cols-3 gap-8">
+                            <div className="bg-[#FDFDFC] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-[#e3e3e0] flex flex-col hover:shadow-xl transition-all hover:-translate-y-2">
+                                <div className="h-48 bg-gradient-to-br from-indigo-100 to-indigo-50 relative border-b border-[#e3e3e0]">
+                                    {/* Mock App UI Screenshot */}
+                                    <div className="absolute bottom-[-1px] left-6 right-6 h-32 bg-white rounded-t-xl border border-b-0 border-[#e3e3e0] shadow-sm p-4 overflow-hidden">
+                                        <div className="text-xs text-[#706f6c] font-medium mb-2">Sleep Score</div>
+                                        <div className="flex items-end gap-2 mb-4">
+                                            <div className="text-4xl font-bold text-[#1b1b18]">92</div>
+                                            <div className="text-sm text-[#10B981] mb-1">Optimal</div>
+                                        </div>
+                                        <div className="w-full h-12 flex items-end gap-1">
+                                            <div className="w-1/6 h-[30%] bg-indigo-200 rounded-t-sm"></div>
+                                            <div className="w-1/6 h-[80%] bg-indigo-500 rounded-t-sm hover:h-[90%] transition-all"></div>
+                                            <div className="w-1/6 h-[40%] bg-indigo-200 rounded-t-sm"></div>
+                                            <div className="w-1/6 h-[60%] bg-indigo-300 rounded-t-sm hover:h-[70%] transition-all"></div>
+                                            <div className="w-1/6 h-[90%] bg-indigo-500 rounded-t-sm hover:h-[100%] transition-all"></div>
+                                            <div className="w-1/6 h-[50%] bg-indigo-200 rounded-t-sm"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="p-8 grow flex flex-col">
+                                    <div className="text-sm font-bold text-[#F53003] mb-2 uppercase tracking-wide">The Burnout Recovery</div>
+                                    <p className="italic text-[#706f6c] mb-6 grow">"I used to wake up exhausted and blame it on getting older. Olevra showed me my deep sleep was constantly interrupted by late-night screen time. A few adjustments, and my app dashboard is finally showing 90+ Sleep Scores. Plus, canceling my $6/mo Oura sub felt amazing."</p>
+                                    <div className="font-bold">— Maggie, 32</div>
+                                </div>
+                            </div>
+
+                            <div className="bg-[#FDFDFC] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-[#e3e3e0] flex flex-col hover:shadow-xl transition-all hover:-translate-y-2">
+                                <div className="h-48 bg-gradient-to-br from-rose-100 to-rose-50 relative border-b border-[#e3e3e0]">
+                                    <div className="absolute bottom-[-1px] left-6 right-6 h-32 bg-white rounded-t-xl border border-b-0 border-[#e3e3e0] shadow-sm p-4 overflow-hidden">
+                                        <div className="text-xs text-[#706f6c] font-medium mb-2">Temperature Trend</div>
+                                        <div className="flex items-end gap-2 mb-2">
+                                            <div className="text-4xl font-bold text-[#1b1b18]">+0.4°</div>
+                                            <div className="text-sm text-rose-500 mb-1">Luteal Phase</div>
+                                        </div>
+                                        <svg className="w-full h-12" viewBox="0 0 100 40" preserveAspectRatio="none">
+                                            <path className="animate-[pulse_3s_infinite]" d="M0,20 Q20,20 40,30 T80,10 T100,5" fill="none" stroke="#F43F5E" strokeWidth="3" strokeLinecap="round" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className="p-8 grow flex flex-col">
+                                    <div className="text-sm font-bold text-rose-500 mb-2 uppercase tracking-wide">The Cycle Tracker</div>
+                                    <p className="italic text-[#706f6c] mb-6 grow">"Other apps just guess my cycle based on a calendar. Olevra tracks my actual body temperature trends. I knew exactly when my luteal phase hit, explained my energy dip, and adjusted my workouts. It's incredibly empowering."</p>
+                                    <div className="font-bold">— Victoria, 28</div>
+                                </div>
+                            </div>
+
+                            <div className="bg-[#FDFDFC] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-[#e3e3e0] flex flex-col hover:shadow-xl transition-all hover:-translate-y-2">
+                                <div className="h-48 bg-gradient-to-br from-teal-100 to-teal-50 relative border-b border-[#e3e3e0]">
+                                    <div className="absolute bottom-[-1px] left-6 right-6 h-32 bg-white rounded-t-xl border border-b-0 border-[#e3e3e0] shadow-sm p-4 overflow-hidden">
+                                        <div className="text-xs text-[#706f6c] font-medium mb-2">Heart Rate Variability</div>
+                                        <div className="flex items-end gap-2 mb-4">
+                                            <div className="text-4xl font-bold text-[#1b1b18]">42</div>
+                                            <div className="text-sm text-rose-500 mb-1">Low (Rest advised)</div>
+                                        </div>
+                                        <div className="w-full h-12 flex items-end gap-1">
+                                            <div className="w-1/6 h-[80%] bg-teal-400 rounded-t-sm hover:h-[90%] transition-all"></div>
+                                            <div className="w-1/6 h-[75%] bg-teal-400 rounded-t-sm hover:h-[85%] transition-all"></div>
+                                            <div className="w-1/6 h-[85%] bg-teal-400 rounded-t-sm hover:h-[95%] transition-all"></div>
+                                            <div className="w-1/6 h-[70%] bg-teal-400 rounded-t-sm"></div>
+                                            <div className="w-1/6 h-[30%] bg-rose-400 rounded-t-sm animate-pulse"></div>
+                                            <div className="w-1/6 h-[25%] bg-rose-500 rounded-t-sm"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="p-8 grow flex flex-col">
+                                    <div className="text-sm font-bold text-teal-600 mb-2 uppercase tracking-wide">The Data Geek</div>
+                                    <p className="italic text-[#706f6c] mb-6 grow">"The HRV tracking is terrifyingly accurate. I noticed my HRV tanking 2 days before I actually felt sick. I rested instead of going to the gym, and avoided a full-blown flu. Best investment I've made in my health."</p>
+                                    <div className="font-bold">— Natasha, 41</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 6. Friction Killer CTA */}
+                <section className="py-32 bg-[#050505] relative overflow-hidden border-t border-[#ffffff10]">
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#F53003]/10 rounded-full blur-[100px] -z-10 translate-x-1/2 -translate-y-1/2"></div>
+                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#FF750F]/10 rounded-full blur-[100px] -z-10 -translate-x-1/2 translate-y-1/2"></div>
+                    
+                    <div className="max-w-4xl mx-auto px-6 text-center z-10 relative">
+                        <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6">Try Olevra for 30 Days.<br/><span className="text-[#F53003]">Zero Risk.</span></h2>
+                        <p className="text-xl text-[#A1A09A] mb-12 max-w-2xl mx-auto">
+                            We know switching trackers is a commitment. That’s why we give you a full 30 days to wear it, sweat in it, sleep in it, and analyze your data. If you aren't absolutely obsessed with the insights (and the zero monthly fees), send it back for a full refund. No questions, no hassle.
+                        </p>
+                        
+                        <div className="flex flex-col items-center gap-6">
+                            <button className="px-10 py-5 bg-[#F53003] hover:bg-[#D42600] text-white rounded-full font-bold text-xl transition-all shadow-[0_0_40px_rgba(245,48,3,0.3)] hover:shadow-[0_0_60px_rgba(245,48,3,0.6)] hover:scale-105">
+                                Claim Your Ring Now
+                            </button>
+                            <div className="text-[#A1A09A] font-medium text-sm">Trusted by 50,000+ users</div>
+                        </div>
+
+                        <div className="flex flex-wrap justify-center gap-8 mt-16 text-[#A1A09A]">
+                            <div className="flex items-center gap-3"><ShieldCheck className="text-white w-6 h-6"/> <span className="font-medium text-white">1-Year Hardware Warranty</span></div>
+                            <div className="flex items-center gap-3"><RefreshCw className="text-white w-6 h-6"/> <span className="font-medium text-white">Free Size Exchanges</span></div>
+                            <div className="flex items-center gap-3"><Lock className="text-white w-6 h-6"/> <span className="font-medium text-white">Secure 256-Bit Checkout</span></div>
+                        </div>
+                    </div>
+                </section>
+                
+                {/* Footer */}
+                <footer className="py-8 bg-black text-center text-sm text-[#706f6c] border-t border-[#ffffff10]">
+                    &copy; 2026 Olevra. All rights reserved.
+                </footer>
             </div>
         </>
     );
