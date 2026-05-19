@@ -92,7 +92,7 @@ export default function Register({ passwordRules }: Props) {
 
                             <Button
                                 type="submit"
-                                className="mt-2 w-full"
+                                className="mt-2 w-full bg-[#F53003] hover:bg-[#D42600] text-white rounded-xl py-6 font-bold transition-all shadow-[0_0_20px_rgba(245,48,3,0.2)] hover:shadow-[0_0_30px_rgba(245,48,3,0.4)]"
                                 tabIndex={5}
                                 data-test="register-user-button"
                             >
@@ -101,9 +101,9 @@ export default function Register({ passwordRules }: Props) {
                             </Button>
                         </div>
 
-                        <div className="text-center text-sm text-muted-foreground">
+                        <div className="text-center text-sm text-[#A1A09A]">
                             Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
+                            <TextLink href={login()} tabIndex={6} className="text-[#F53003] hover:text-[#D42600] font-medium">
                                 Log in
                             </TextLink>
                         </div>

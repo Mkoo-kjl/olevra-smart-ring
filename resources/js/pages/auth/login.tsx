@@ -1,4 +1,4 @@
-import { Form, Head } from '@inertiajs/react';
+        import { Form, Head } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -55,7 +55,7 @@ export default function Login({
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
-                                            className="ml-auto text-sm"
+                                            className="ml-auto text-sm text-[#F53003] hover:text-[#D42600]"
                                             tabIndex={5}
                                         >
                                             Forgot password?
@@ -84,7 +84,7 @@ export default function Login({
 
                             <Button
                                 type="submit"
-                                className="mt-4 w-full"
+                                className="mt-4 w-full bg-[#F53003] hover:bg-[#D42600] text-white rounded-xl py-6 font-bold transition-all shadow-[0_0_20px_rgba(245,48,3,0.2)] hover:shadow-[0_0_30px_rgba(245,48,3,0.4)]"
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"
@@ -95,9 +95,9 @@ export default function Login({
                         </div>
 
                         {canRegister && (
-                            <div className="text-center text-sm text-muted-foreground">
+                            <div className="text-center text-sm text-[#A1A09A]">
                                 Don't have an account?{' '}
-                                <TextLink href={register()} tabIndex={5}>
+                                <TextLink href={register()} tabIndex={5} className="text-[#F53003] hover:text-[#D42600] font-medium">
                                     Sign up
                                 </TextLink>
                             </div>

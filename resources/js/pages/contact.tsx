@@ -99,7 +99,6 @@ export default function Contact({ canRegister = true }: { canRegister?: boolean 
                                         id="firstName" 
                                         required
                                         className="bg-[#161615] border border-[#ffffff10] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#F53003] focus:ring-1 focus:ring-[#F53003] transition-all"
-                                        placeholder="Jane"
                                     />
                                 </div>
                                 <div className="flex flex-col gap-2">
@@ -109,7 +108,6 @@ export default function Contact({ canRegister = true }: { canRegister?: boolean 
                                         id="lastName" 
                                         required
                                         className="bg-[#161615] border border-[#ffffff10] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#F53003] focus:ring-1 focus:ring-[#F53003] transition-all"
-                                        placeholder="Doe"
                                     />
                                 </div>
                             </div>
@@ -121,7 +119,6 @@ export default function Contact({ canRegister = true }: { canRegister?: boolean 
                                     id="email" 
                                     required
                                     className="bg-[#161615] border border-[#ffffff10] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#F53003] focus:ring-1 focus:ring-[#F53003] transition-all"
-                                    placeholder="jane@example.com"
                                 />
                             </div>
 
