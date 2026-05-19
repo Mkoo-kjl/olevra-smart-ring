@@ -89,7 +89,8 @@ export default function Welcome({ canRegister = true }: { canRegister?: boolean 
                         <div className="flex flex-col gap-8 z-10">
                             <h1 className="text-5xl lg:text-7xl font-semibold leading-tight tracking-tight text-white">
                                 Own Your Health.<br/>
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F53003] to-[#FF750F]">Not a Subscription.</span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F53003] to-[#FF750F]">No Subscriptions. </span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F53003] to-[#FF750F]">No Hidden Fees.</span>
                             </h1>
                             <p className="text-lg lg:text-xl text-[#A1A09A] max-w-xl leading-relaxed">
                                 Advanced Sleep, HRV, Stress, and Cycle tracking in a sleek, aerospace-grade titanium ring. 100% of your data, zero hidden fees.
