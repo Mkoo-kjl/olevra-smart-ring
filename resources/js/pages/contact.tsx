@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { dashboard, login, register } from '@/routes';
 import { Mail, MessageSquare, MapPin, Send } from 'lucide-react';
+import React, { useState } from 'react';
+import { dashboard, login, register } from '@/routes';
 
 export default function Contact({ canRegister = true }: { canRegister?: boolean }) {
     const { auth } = usePage().props;
@@ -24,6 +24,7 @@ export default function Contact({ canRegister = true }: { canRegister?: boolean 
                     <div className="text-2xl font-bold tracking-tighter text-white">Olevra.</div>
                     <div className="hidden md:flex gap-8 items-center justify-center absolute left-1/2 -translate-x-1/2">
                         <Link href="/" className="text-sm font-medium text-[#A1A09A] hover:text-[#F53003] transition-colors">Home</Link>
+                        <Link href="/product" className="text-sm font-medium text-[#A1A09A] hover:text-[#F53003] transition-colors">Product</Link>
                         <Link href="/about" className="text-sm font-medium text-[#A1A09A] hover:text-[#F53003] transition-colors">About</Link>
                         <Link href="/contact" className="text-sm font-medium text-white hover:text-[#F53003] transition-colors">Contact</Link>
                     </div>

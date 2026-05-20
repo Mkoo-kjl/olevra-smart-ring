@@ -7,6 +7,7 @@ Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
+Route::inertia('/product', 'product')->name('product');
 Route::inertia('/about', 'about')->name('about');
 Route::inertia('/contact', 'contact')->name('contact');
 
